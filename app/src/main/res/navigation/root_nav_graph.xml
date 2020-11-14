@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/movieDetailsFragment"
-        android:name="com.example.moviesapp.features.details.MovieDetailsFragment"
+        android:name="com.example.moviesapp.features.details.view.MovieDetailsFragment"
         android:label="fragment_movie_details"
         tools:layout="@layout/fragment_movie_details" />
 </navigation>

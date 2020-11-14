@@ -30,11 +30,4 @@ class MoviesViewModel(val repo: MoviesRepository) : ViewModel() {
         return filteredMovies
     }
 
-    fun getMovieDetail(id: Int): LiveData<Details> {
-        val movieDetails: LiveData<Details> = MutableLiveData()
-        viewModelScope.launch {
-            (movieDetails as MutableLiveData).value = repo.getMovieDetails(id= id)
-        }
-        return movieDetails
-    }
 }
