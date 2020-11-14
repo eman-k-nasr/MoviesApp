@@ -20,6 +20,7 @@ import com.example.moviesapp.data.repository.MoviesRepository
 import com.example.moviesapp.features.movies.adapter.MoviesAdapter
 import com.example.moviesapp.features.movies.viewmodel.MoviesViewModel
 import com.example.moviesapp.utils.API_KEY
+import com.example.moviesapp.utils.Connectivity
 import com.example.moviesapp.utils.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.fragment_movies_list.*
 
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_movies_list.*
  * A simple [Fragment] subclass.
  */
 class MoviesListFragment : Fragment() {
+    lateinit var connectivity: Connectivity
     private lateinit var moviesViewModel : MoviesViewModel
     private lateinit var moviesAdapter: MoviesAdapter
     private lateinit var movies : List<Movie>
