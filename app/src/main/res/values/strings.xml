@@ -4,4 +4,6 @@
     <string name="overview">Overview:</string>
     <string name="vote">Vote:</string>
     <string name="genre">Genre:</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

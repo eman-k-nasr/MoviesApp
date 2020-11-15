@@ -11,7 +11,6 @@ class MoviesRepository(val remote: MoviesApiService) {
         page: String = "1"
     ): Result {
         return try {
-            Result.Loading
             val response = remote.getPopularMovies(lang = lang, page = page)
             if (response.isSuccessful) {
                 if (response.body() != null) {
@@ -35,7 +34,6 @@ class MoviesRepository(val remote: MoviesApiService) {
         query: String
     ): Result {
         return try {
-            Result.Loading
             val response = remote.searchMovie(query = query)
             if (response.isSuccessful) {
                 if (response.body() != null) {
@@ -59,7 +57,6 @@ class MoviesRepository(val remote: MoviesApiService) {
         id: Int
     ): Result {
         return try {
-            Result.Loading
             val response = remote.getMovieDetails(id = id)
             if (response.isSuccessful) {
                 if (response.body() != null) {

@@ -1,28 +1,24 @@
 package com.example.moviesapp.features.details.view
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.moviesapp.R
 import com.example.moviesapp.data.model.Details
-import com.example.moviesapp.data.model.Movie
 import com.example.moviesapp.data.model.Result
 import com.example.moviesapp.data.remote.RetrofitBuilder
 import com.example.moviesapp.data.repository.MoviesRepository
 import com.example.moviesapp.features.details.viewmodel.DetailsViewModel
 import com.example.moviesapp.features.movies.adapter.GenresAdapter
-import com.example.moviesapp.features.movies.adapter.MoviesAdapter
 import com.example.moviesapp.utils.IMAGE_BASE_URL
 import com.example.moviesapp.utils.MoviesViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_movie_details.*
-import kotlinx.android.synthetic.main.fragment_movies_list.*
 import kotlinx.android.synthetic.main.fragment_movies_list.progressBar
 
 /**
@@ -50,6 +46,7 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        showProgressBar()
         detailsViewModel.getMovieDetail(args.movieId).observe(viewLifecycleOwner, Observer {
             handleResult(it)
         })
@@ -57,7 +54,6 @@ class MovieDetailsFragment : Fragment() {
 
     fun handleResult(result: Result){
         return when(result){
-            is Result.Loading -> showProgressBar()
             is Result.Success<*> -> showResult(result.data)
             is Result.Error -> handleError(result.error)
             Result.InvalidData -> showEmptyView()

@@ -17,6 +17,7 @@ import com.example.moviesapp.data.remote.RetrofitBuilder
 import com.example.moviesapp.data.repository.MoviesRepository
 import com.example.moviesapp.features.movies.adapter.MoviesAdapter
 import com.example.moviesapp.features.movies.viewmodel.MoviesViewModel
+import com.example.moviesapp.utils.Connectivity
 import com.example.moviesapp.utils.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.fragment_movies_list.*
 
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_movies_list.*
 class MoviesListFragment : Fragment() {
     private lateinit var moviesViewModel : MoviesViewModel
     private lateinit var moviesAdapter: MoviesAdapter
-
+    lateinit var connectivity: Connectivity
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,15 +41,26 @@ class MoviesListFragment : Fragment() {
         val viewModelFactory = MoviesViewModelFactory(MoviesRepository(RetrofitBuilder.apiService))
         moviesViewModel = ViewModelProvider(this,viewModelFactory).get(MoviesViewModel::class.java)
         moviesAdapter = MoviesAdapter(listOf())
+        connectivity = Connectivity(requireContext())
         moviesListRecyclerView.layoutManager = LinearLayoutManager(context)
         moviesListRecyclerView.adapter = moviesAdapter
     }
 
     override fun onResume() {
         super.onResume()
-        moviesViewModel.getPopularMovies().observe(viewLifecycleOwner, Observer {
-            handleResult(it)
+        Connectivity(requireContext()).observe(this, Observer { isConnected ->
+            isConnected?.let {
+                if (it) {
+                    showProgressBar()
+                    moviesViewModel.getPopularMovies().observe(viewLifecycleOwner, Observer {
+                        handleResult(it)
+                    })
+                } else {
+                    //todo:fetch from local
+                }
+            }
         })
+
         moviesViewModel.searchMovie(query= "ant man").observe(viewLifecycleOwner, Observer {
             //todo:implement search feature
         })
@@ -56,7 +68,6 @@ class MoviesListFragment : Fragment() {
 
     fun handleResult(result: Result){
         return when(result){
-            is Result.Loading -> showProgressBar()
             is Result.Success<*> -> showResult(result.data)
             is Result.Error -> handleError(result.error)
             Result.InvalidData -> showEmptyView()

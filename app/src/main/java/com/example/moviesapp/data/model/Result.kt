@@ -9,5 +9,4 @@ sealed class Result{
         data class ResourceNotFound(val exception: String) : HttpErrors()
         data class InternalServerError(val exception: String) : HttpErrors()
     }
-    object Loading : Result()
 }
