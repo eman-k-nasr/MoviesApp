@@ -5,9 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
 import com.example.moviesapp.data.model.Movie
+import com.example.moviesapp.features.movies.view.MoviesListFragment
+import com.example.moviesapp.features.movies.view.MoviesListFragmentDirections
 import com.example.moviesapp.utils.IMAGE_BASE_URL
 import com.squareup.picasso.Picasso
 
@@ -30,6 +33,11 @@ class MoviesAdapter(private var movies: List<Movie>) :
         holder.movieReleaseDate.text = movies[position].releaseDate
         Picasso.get().load("${IMAGE_BASE_URL}${movies[position].backdropPath}")
             .into(holder.movieImg)
+
+        holder.itemView.setOnClickListener{
+            val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(movies[position].id.toInt())
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -17,7 +17,6 @@ import com.example.moviesapp.data.remote.RetrofitBuilder
 import com.example.moviesapp.data.repository.MoviesRepository
 import com.example.moviesapp.features.movies.adapter.MoviesAdapter
 import com.example.moviesapp.features.movies.viewmodel.MoviesViewModel
-import com.example.moviesapp.utils.Connectivity
 import com.example.moviesapp.utils.MoviesViewModelFactory
 import kotlinx.android.synthetic.main.fragment_movies_list.*
 
