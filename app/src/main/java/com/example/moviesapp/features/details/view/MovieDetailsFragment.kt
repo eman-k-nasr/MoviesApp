@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.moviesapp.R
+import com.example.moviesapp.data.local.LocalDatabaseImp
+import com.example.moviesapp.data.local.MovieDatabase
 import com.example.moviesapp.data.model.Details
 import com.example.moviesapp.data.model.Result
 import com.example.moviesapp.data.remote.RetrofitBuilder
@@ -40,7 +42,12 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         genresAdapter = GenresAdapter(listOf(),requireContext())
-        val viewModelFactory = MoviesViewModelFactory(MoviesRepository(RetrofitBuilder.apiService))
+        val viewModelFactory = MoviesViewModelFactory(
+            MoviesRepository(
+                RetrofitBuilder.apiService
+                , LocalDatabaseImp(MovieDatabase.DatabaseBuilder.getInstance(requireContext()))
+            )
+        )
         detailsViewModel = ViewModelProvider(this,viewModelFactory).get(DetailsViewModel::class.java)
     }
 

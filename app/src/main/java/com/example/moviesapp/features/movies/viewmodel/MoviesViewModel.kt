@@ -30,4 +30,13 @@ class MoviesViewModel(val repo: MoviesRepository) : ViewModel() {
         return filteredMovies
     }
 
+    fun getLocalMovies(): LiveData<Result> {
+        val localMovies: LiveData<Result> = MutableLiveData()
+        viewModelScope.launch {
+            (localMovies as MutableLiveData).value =
+                repo.getLocalMovies()
+        }
+        return localMovies
+    }
+
 }

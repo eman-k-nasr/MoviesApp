@@ -1,10 +1,12 @@
 package com.example.moviesapp.data.repository
 
+import com.example.moviesapp.data.local.ILocalDatabase
+import com.example.moviesapp.data.model.Movie
 import com.example.moviesapp.data.model.Result
 import com.example.moviesapp.data.remote.MoviesApiService
 import java.io.IOException
 
-class MoviesRepository(val remote: MoviesApiService) {
+class MoviesRepository(val remote: MoviesApiService, val local: ILocalDatabase) {
 
     suspend fun getPopularMovies(
         lang: String = "en-US",
@@ -14,6 +16,7 @@ class MoviesRepository(val remote: MoviesApiService) {
             val response = remote.getPopularMovies(lang = lang, page = page)
             if (response.isSuccessful) {
                 if (response.body() != null) {
+                    insertMovies(response.body()!!.movies)
                     Result.Success(data = response.body()?.movies)
                 } else {
                     Result.InvalidData
@@ -74,6 +77,19 @@ class MoviesRepository(val remote: MoviesApiService) {
         } catch (ex: IOException) {
             Result.Error(error = ex.message!!)
         }
+    }
+
+    suspend fun getLocalMovies(): Result {
+        val movies = local.getMovies()
+        if (movies.isEmpty()) {
+            return Result.InvalidData
+        } else {
+            return Result.Success(movies)
+        }
+    }
+
+    suspend fun insertMovies(movies: List<Movie>) {
+        local.insertMovies(movies)
     }
 
 }

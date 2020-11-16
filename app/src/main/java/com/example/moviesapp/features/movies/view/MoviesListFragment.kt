@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.R
+import com.example.moviesapp.data.local.LocalDatabaseImp
+import com.example.moviesapp.data.local.MovieDatabase
 import com.example.moviesapp.data.model.Movie
 import com.example.moviesapp.data.model.Result
 import com.example.moviesapp.data.remote.RetrofitBuilder
@@ -38,7 +40,12 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModelFactory = MoviesViewModelFactory(MoviesRepository(RetrofitBuilder.apiService))
+        val viewModelFactory = MoviesViewModelFactory(
+            MoviesRepository(
+                RetrofitBuilder.apiService
+                , LocalDatabaseImp(MovieDatabase.DatabaseBuilder.getInstance(requireContext()))
+            )
+        )
         moviesViewModel = ViewModelProvider(this,viewModelFactory).get(MoviesViewModel::class.java)
         moviesAdapter = MoviesAdapter(listOf())
         connectivity = Connectivity(requireContext())
@@ -56,7 +63,9 @@ class MoviesListFragment : Fragment() {
                         handleResult(it)
                     })
                 } else {
-                    //todo:fetch from local
+                    moviesViewModel.getLocalMovies().observe(viewLifecycleOwner, Observer {
+                        handleResult(it)
+                    })
                 }
             }
         })
