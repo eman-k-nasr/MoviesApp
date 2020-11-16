@@ -127,5 +127,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".4"
+        app:layout_constraintWidth_percent=".4"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/resultgroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="movieImg,movieNameTv,movieOverviewTv,movieReleaseDateTv,releaseDateTitle,movieVoteAverageTv,movieVoteCountTv,voteTitle,genreTitle,genreGridView"
+        android:visibility="invisible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/emptygroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="imageView,textView"
+        android:visibility="invisible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

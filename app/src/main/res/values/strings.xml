@@ -6,4 +6,6 @@
     <string name="genre">Genre:</string>
     <string name="online">Online</string>
     <string name="offline">Offline,try to connect to network!!</string>
+    <string name="invalid">Invalid data ,please try again</string>
+    <string name="nointernet">Not Connected to internet,please try again to see movie\'s details!!</string>
 </resources>

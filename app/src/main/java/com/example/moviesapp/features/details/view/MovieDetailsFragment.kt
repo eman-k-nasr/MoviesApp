@@ -3,6 +3,8 @@ package com.example.moviesapp.features.details.view
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,6 +19,7 @@ import com.example.moviesapp.data.remote.RetrofitBuilder
 import com.example.moviesapp.data.repository.MoviesRepository
 import com.example.moviesapp.features.details.viewmodel.DetailsViewModel
 import com.example.moviesapp.features.movies.adapter.GenresAdapter
+import com.example.moviesapp.utils.Connectivity
 import com.example.moviesapp.utils.IMAGE_BASE_URL
 import com.example.moviesapp.utils.MoviesViewModelFactory
 import com.squareup.picasso.Picasso
@@ -53,10 +56,20 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        showProgressBar()
-        detailsViewModel.getMovieDetail(args.movieId).observe(viewLifecycleOwner, Observer {
-            handleResult(it)
+        Connectivity(requireContext()).observe(this, Observer { isConnected ->
+            isConnected?.let {
+                if (it) {
+                    showProgressBar()
+                    detailsViewModel.getMovieDetail(args.movieId)
+                        .observe(viewLifecycleOwner, Observer {
+                            handleResult(it)
+                        })
+                } else {
+                    checkInternetView()
+                }
+            }
         })
+
     }
 
     fun handleResult(result: Result){
@@ -70,20 +83,38 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    fun checkInternetView() {
+        progressBar.visibility = INVISIBLE
+        resultgroup.visibility = INVISIBLE
+        emptygroup.visibility = VISIBLE
+        imageView.setImageResource(R.drawable.ic_no_wifi)
+        textView.text = getString(R.string.nointernet)
+    }
     fun showProgressBar(){
-        progressBar.visibility = View.VISIBLE
+        progressBar.visibility = VISIBLE
+        resultgroup.visibility = INVISIBLE
+        emptygroup.visibility = INVISIBLE
     }
     fun showEmptyView(){
-        println("No Data is Found")
+        progressBar.visibility = INVISIBLE
+        resultgroup.visibility = INVISIBLE
+        emptygroup.visibility = VISIBLE
+        imageView.setImageResource(R.drawable.ic_invalid)
+        textView.text = getString(R.string.invalid)
     }
     fun showResult(data: Any?){
-        progressBar.visibility = View.INVISIBLE
+        progressBar.visibility = INVISIBLE
+        emptygroup.visibility = INVISIBLE
+        resultgroup.visibility = VISIBLE
         val movie = data as Details
         setViews(movie)
     }
     fun handleError(msg:String){
-        progressBar.visibility = View.INVISIBLE
-        println("ERROR: ${msg}")
+        progressBar.visibility = INVISIBLE
+        resultgroup.visibility = INVISIBLE
+        emptygroup.visibility = VISIBLE
+        imageView.setImageResource(R.drawable.ic_error)
+        textView.text = msg
     }
     fun setViews(movie:Details){
         movieNameTv.text = movie.title

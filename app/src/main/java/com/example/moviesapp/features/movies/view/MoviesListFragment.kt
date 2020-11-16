@@ -62,6 +62,10 @@ class MoviesListFragment : Fragment() {
                     moviesViewModel.getPopularMovies().observe(viewLifecycleOwner, Observer {
                         handleResult(it)
                     })
+                    moviesViewModel.searchMovie(query = "ant man")
+                        .observe(viewLifecycleOwner, Observer {
+                            //todo:implement search feature
+                        })
                 } else {
                     moviesViewModel.getLocalMovies().observe(viewLifecycleOwner, Observer {
                         handleResult(it)
@@ -70,9 +74,6 @@ class MoviesListFragment : Fragment() {
             }
         })
 
-        moviesViewModel.searchMovie(query= "ant man").observe(viewLifecycleOwner, Observer {
-            //todo:implement search feature
-        })
     }
 
     fun handleResult(result: Result){
@@ -88,19 +89,29 @@ class MoviesListFragment : Fragment() {
 
     fun showProgressBar(){
         progressBar.visibility = VISIBLE
+        imageView.visibility = INVISIBLE
+        textView.visibility = INVISIBLE
         moviesListRecyclerView.visibility = INVISIBLE
     }
     fun showEmptyView(){
-        println("No Data is Found")
+        progressBar.visibility = INVISIBLE
+        emptygroup.visibility = VISIBLE
+        moviesListRecyclerView.visibility = INVISIBLE
+        imageView.setImageResource(R.drawable.ic_invalid)
+        textView.text = getString(R.string.invalid)
     }
     fun showResult(data: Any?){
-        moviesListRecyclerView.visibility = VISIBLE
         progressBar.visibility = INVISIBLE
+        emptygroup.visibility = INVISIBLE
+        moviesListRecyclerView.visibility = VISIBLE
         moviesAdapter = MoviesAdapter(data as List<Movie>)
         moviesListRecyclerView.adapter = moviesAdapter
     }
     fun handleError(msg:String){
         progressBar.visibility = INVISIBLE
-        println("ERROR: ${msg}")
+        emptygroup.visibility = VISIBLE
+        moviesListRecyclerView.visibility = INVISIBLE
+        imageView.setImageResource(R.drawable.ic_error)
+        textView.text = msg
     }
 }
